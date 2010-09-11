@@ -16,5 +16,8 @@ module Mongo
   
   class Database
   end
+
+  class Collection
+  end
 end
 
