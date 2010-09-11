@@ -13,5 +13,9 @@ class Montgomery::Collection
   def initialize(mongo_collection)
     @mongo_collection = mongo_collection
   end
+
+  def [](subcollection_name)
+    Montgomery::Collection.new(@mongo_collection[subcollection_name])
+  end
 end
 

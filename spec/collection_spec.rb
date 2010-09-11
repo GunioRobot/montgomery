@@ -18,5 +18,10 @@ describe 'Montgomery::Collection' do
       @collection.send(message, :args)
     end
   end
+
+  it 'should return subcollection' do
+    Mongo::Collection.any_instance.expects(:[]).with('montgomerish')
+    @collection['montgomerish'].should.be.an.instance_of(Montgomery::Collection)
+  end
 end
 
