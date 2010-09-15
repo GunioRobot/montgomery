@@ -1,0 +1,20 @@
+Montgomery - a thin and lean Ruby object mapping layer for MongoDB
+
+Montogomery is a very simplistic and thin layer over the existing Ruby driver. Something that turns MongoDB into a kind of persistent object storage. Still the programmer has to decide when an object should be saved.
+
+When an object is fetched from the MongoDB we set its instance variables based on the returned document. Additionally @_id is set - MongoDB unique document id. In the DB on save and insert a _class field is stored too. It contains the class name so we know which class to instantiate later when fetching the object.
+
+Instead of polluting your objects and classes with a myriad of DB-related methods (like #save, .find, etc) we have here 2 kinds of objects: entities and collections. Please take a peek into /examples dir.
+
+Installation
+
+Currently there's no gem, so just clone the repo.
+
+Usage
+
+$LOAD_PATH.unshift '/path_to_montgomery/lib'
+require 'montgomery'
+
+Examples
+
+Please take a look in /examples directory and /spec. Note: examples they require a working MongoDB.
