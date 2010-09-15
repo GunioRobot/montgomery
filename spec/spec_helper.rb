@@ -1,6 +1,14 @@
+def silently(&block)
+  warn_level = $VERBOSE
+  $VERBOSE = nil
+  result = block.call
+  $VERBOSE = warn_level
+  result
+end
+
 gem 'test-unit'
 require 'test/spec'
-require 'mocha'
+silently { require 'mocha' }
 
 require 'pp'
 
