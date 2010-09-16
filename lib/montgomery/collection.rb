@@ -31,13 +31,13 @@ class Montgomery::Collection
     raise 'Not implemented'
   end
 
-  def find_and_modify(*args)
-    raise 'Not implemented'
+  def find_and_modify(options={})
+    doc = @mongo_collection.find_and_modify(options)
+    self.class.doc_to_entity(doc)
   end
 
   def find_one(spec_or_object_id=nil, options={})
     doc = @mongo_collection.find_one(spec_or_object_id, options)
-    return unless doc
     self.class.doc_to_entity(doc)
   end
 
@@ -62,6 +62,8 @@ class Montgomery::Collection
   private
 
   def self.doc_to_entity(doc)
+    return unless doc
+
     klass_name = doc.delete('_class')
     klass = Kernel.const_get(klass_name)
     klass.new(doc)

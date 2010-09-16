@@ -43,6 +43,11 @@ describe 'Montgomery::Collection' do
       @mongo_collection.expects(:find_one).with(nil, {}).returns(nil)
       @collection.find_one.should.be.nil?
     end
+
+    it 'should return nil from #find_and_modify' do
+      @mongo_collection.expects(:find_and_modify).with({}).returns(nil)
+      @collection.find_and_modify.should.be.nil?
+    end
   end
 
   describe 'with entity' do
@@ -52,11 +57,20 @@ describe 'Montgomery::Collection' do
       end
 
       @doc = {'name' => 'Wojciech', '_class' => 'User'}
-      @mongo_collection.expects(:find_one).returns(@doc)
     end
 
-    it 'should find entity' do
+    it 'should find_one entity' do
+      @mongo_collection.expects(:find_one).returns(@doc)
+
       entity = @collection.find_one
+      entity.should.be.instance_of(User)
+      entity.instance_variable_get(:@name).should.equal('Wojciech')
+    end
+
+    it 'should find_and_modify entity' do
+      @mongo_collection.expects(:find_and_modify).returns(@doc)
+
+      entity = @collection.find_and_modify
       entity.should.be.instance_of(User)
       entity.instance_variable_get(:@name).should.equal('Wojciech')
     end
