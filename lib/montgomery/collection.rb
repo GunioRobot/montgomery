@@ -35,8 +35,10 @@ class Montgomery::Collection
     raise 'Not implemented'
   end
 
-  def find_one(*args)
-    raise 'Not implemented'
+  def find_one(spec_or_object_id=nil, options={})
+    doc = @mongo_collection.find_one(spec_or_object_id, options)
+    return unless doc
+    self.class.doc_to_entity(doc)
   end
 
   def insert(*args)
@@ -55,5 +57,13 @@ class Montgomery::Collection
 
   def update(*args)
     raise 'Not implemented'
+  end
+
+  private
+
+  def self.doc_to_entity(doc)
+    klass_name = doc.delete('_class')
+    klass = Kernel.const_get(klass_name)
+    klass.new(doc)
   end
 end

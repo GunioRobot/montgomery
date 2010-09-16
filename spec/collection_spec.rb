@@ -37,4 +37,28 @@ describe 'Montgomery::Collection' do
   it 'should raise exception when calling #db' do
     lambda { @collection.db }.should.raise(RuntimeError)
   end
+
+  describe 'empty' do
+    it 'should return nil from #find_one' do
+      @mongo_collection.expects(:find_one).with(nil, {}).returns(nil)
+      @collection.find_one.should.be.nil?
+    end
+  end
+
+  describe 'with entity' do
+    before do
+      class User
+        include Montgomery::Entity
+      end
+
+      @doc = {'name' => 'Wojciech', '_class' => 'User'}
+      @mongo_collection.expects(:find_one).returns(@doc)
+    end
+
+    it 'should find entity' do
+      entity = @collection.find_one
+      entity.should.be.instance_of(User)
+      entity.instance_variable_get(:@name).should.equal('Wojciech')
+    end
+  end
 end
