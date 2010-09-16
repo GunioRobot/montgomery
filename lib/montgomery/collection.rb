@@ -49,6 +49,7 @@ class Montgomery::Collection
     entities.each_with_index do |entity, index|
       entity.instance_variable_set(:@_id, ids[index])
     end
+    ids
   end
 
   alias_method :<<, :insert

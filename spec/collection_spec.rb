@@ -80,7 +80,7 @@ describe 'Montgomery::Collection' do
       @mongo_collection.expects(:insert).with([@doc], {}).returns(id)
 
       user = User.new name: 'Wojciech'
-      @collection.insert(user)
+      @collection.insert(user).should.equal [id]
       user._id.should.equal id
     end
 
@@ -95,7 +95,7 @@ describe 'Montgomery::Collection' do
 
       user1 = User.new name: 'Wojciech'
       user2 = User.new name: 'Hubert'
-      @collection.insert([user1, user2])
+      @collection.insert([user1, user2]).should.equal [id1, id2]
       user1._id.should.eql id1
       user2._id.should.eql id2
     end
