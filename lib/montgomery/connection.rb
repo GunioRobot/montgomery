@@ -1,6 +1,6 @@
 class Montgomery::Connection
-  def initialize
-    @mongo_connection = Mongo::Connection.new
+  def initialize(host=nil, port=nil, options={})
+    @mongo_connection = Mongo::Connection.new(host, port, options)
   end
 
   def database(name)
@@ -11,4 +11,3 @@ class Montgomery::Connection
     raise 'Use #database instead of #db'
   end
 end
-

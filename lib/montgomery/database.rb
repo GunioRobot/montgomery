@@ -7,4 +7,3 @@ class Montgomery::Database
     Montgomery::Collection.new @mongo_database.collection(name)
   end
 end
-
