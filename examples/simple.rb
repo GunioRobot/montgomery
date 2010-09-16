@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'pp'
 
 $LOAD_PATH.unshift 'lib'
