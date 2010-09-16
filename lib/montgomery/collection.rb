@@ -60,8 +60,11 @@ class Montgomery::Collection
     true
   end
 
-  def save(*args)
-    raise 'Not implemented'
+  def save(entity, options={})
+    doc = entity.to_montgomery_doc
+    id = @mongo_collection.save(doc, options)
+    doc.instance_variable_set(:@_id, id)
+    id
   end
 
   def update(*args)

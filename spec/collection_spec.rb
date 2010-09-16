@@ -52,10 +52,6 @@ describe 'Montgomery::Collection' do
 
   describe 'with entity' do
     before do
-      class User
-        include Montgomery::Entity
-      end
-
       @doc = {'name' => 'Wojciech', '_class' => 'User'}
     end
 
@@ -118,6 +114,18 @@ describe 'Montgomery::Collection' do
       @mongo_collection.expects(:remove).with({_id: {'$in' => [user_id]}}, {})
 
       @collection.remove(user).should.equal true
+    end
+
+    it 'should save the entity' do
+      id = BSON::ObjectId.from_time(Time.now)
+      @mongo_collection.expects(:save).with({
+        '_id' => id,
+        'name' => 'Hubert',
+        '_class' => 'User'
+      }, {}).returns(id)
+      user = User.new(name: 'Wojciech', _id: id)
+      user.name = 'Hubert'
+      @collection.save(user).should.equal id
     end
   end
 end
