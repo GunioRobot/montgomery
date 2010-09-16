@@ -55,10 +55,10 @@ pp user.places.to_a #=> []
 
 # create some places
 my_places = []
-myplaces << Place.new(name: 'ABC', user_id: user._id, city: 'Białystok', district: 'Centrum')
-myplaces << Place.new(name: 'Empik', user_id: user._id, city: 'Białystok', district: 'Śródmieście')
-myplaces << Place.new(name: 'Savona', user_id: user._id, city: 'Białystok', district: 'Śródmieście')
-myplaces.each { |place| Places.insert place }
+my_places << Place.new(name: 'ABC', user_id: user._id, city: 'Białystok', district: 'Centrum')
+my_places << Place.new(name: 'Empik', user_id: user._id, city: 'Białystok', district: 'Śródmieście')
+my_places << Place.new(name: 'Savona', user_id: user._id, city: 'Białystok', district: 'Śródmieście')
+my_places.each { |place| Places.insert place }
 
 pp user.places.to_a
 
