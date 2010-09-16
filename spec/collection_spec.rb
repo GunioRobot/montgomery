@@ -99,5 +99,25 @@ describe 'Montgomery::Collection' do
       user1._id.should.eql id1
       user2._id.should.eql id2
     end
+
+    it 'should remove all entities' do
+      @mongo_collection.expects(:remove).with({}, {})
+
+      @collection.remove
+    end
+
+    it 'should remove all entities with name Wojciech' do
+      @mongo_collection.expects(:remove).with({name: 'Wojciech'}, {})
+
+      @collection.remove({name: 'Wojciech'})
+    end
+
+    it 'should remove existing entity' do
+      user_id = BSON::ObjectId.from_time(Time.now)
+      user = User.new({_id: user_id})
+      @mongo_collection.expects(:remove).with({_id: {'$in' => [user_id]}}, {})
+
+      @collection.remove(user)
+    end
   end
 end

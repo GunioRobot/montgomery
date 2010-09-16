@@ -53,8 +53,9 @@ class Montgomery::Collection
 
   alias_method :<<, :insert
 
-  def remove(*args)
-    raise 'Not implemented'
+  def remove(selector_or_entity_or_entities = {}, options = {})
+    selector = to_selector(selector_or_entity_or_entities)
+    @mongo_collection.remove(selector, options)
   end
 
   def save(*args)
@@ -77,5 +78,15 @@ class Montgomery::Collection
 
   def to_array(object_or_objects)
     object_or_objects.kind_of?(Array) ? object_or_objects : [object_or_objects]
+  end
+
+  def to_selector(selector_or_entity_or_entities)
+    if selector_or_entity_or_entities.kind_of? Hash
+      selector_or_entity_or_entities
+    else
+      entities = to_array(selector_or_entity_or_entities)
+      ids = entities.map { |entity| entity._id }
+      {_id: {'$in' => ids}}
+    end
   end
 end
