@@ -103,13 +103,13 @@ describe 'Montgomery::Collection' do
     it 'should remove all entities' do
       @mongo_collection.expects(:remove).with({}, {})
 
-      @collection.remove
+      @collection.remove.should.equal true
     end
 
     it 'should remove all entities with name Wojciech' do
       @mongo_collection.expects(:remove).with({name: 'Wojciech'}, {})
 
-      @collection.remove({name: 'Wojciech'})
+      @collection.remove({name: 'Wojciech'}).should.equal true
     end
 
     it 'should remove existing entity' do
@@ -117,7 +117,7 @@ describe 'Montgomery::Collection' do
       user = User.new({_id: user_id})
       @mongo_collection.expects(:remove).with({_id: {'$in' => [user_id]}}, {})
 
-      @collection.remove(user)
+      @collection.remove(user).should.equal true
     end
   end
 end

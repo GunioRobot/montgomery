@@ -57,6 +57,7 @@ class Montgomery::Collection
   def remove(selector_or_entity_or_entities = {}, options = {})
     selector = to_selector(selector_or_entity_or_entities)
     @mongo_collection.remove(selector, options)
+    true
   end
 
   def save(*args)
