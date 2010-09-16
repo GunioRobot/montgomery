@@ -3,6 +3,8 @@ class Montgomery::Collection
 
   include Montgomery::Collection::Delegator
 
+  attr_reader :database
+
   # properties
   delegate :hint, :hint=, :name, :pk_factory
 
@@ -10,12 +12,18 @@ class Montgomery::Collection
   delegate :count, :create_index, :distinct, :drop, :drop_index, :drop_indexes,
            :group, :index_information, :map_reduce, :options, :rename, :stats
 
-  def initialize(mongo_collection)
-    @mongo_collection = mongo_collection
+  def initialize(values)
+    @mongo_collection = values[:mongo_collection]
+    @database = values[:database]
   end
 
   def [](subcollection_name)
-    Montgomery::Collection.new(@mongo_collection[subcollection_name])
+    Montgomery::Collection.new mongo_collection: @mongo_collection[subcollection_name],
+                               database: @database
+  end
+
+  def db
+    raise 'Use #database instead of #db'
   end
 
   def find(*args)

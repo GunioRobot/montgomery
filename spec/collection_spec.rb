@@ -4,8 +4,10 @@ describe 'Montgomery::Collection' do
   before do
     mongo_connection = Mongo::Connection.new
     mongo_database = mongo_connection.db('montgomery')
+    @database = Montgomery::Database.new(mongo_database)
     @mongo_collection = mongo_database.collection('items')
-    @collection = Montgomery::Collection.new(@mongo_collection)
+    @collection = Montgomery::Collection.new(mongo_collection: @mongo_collection,
+                                             database: @database)
   end
 
   delegated_properties = [:hint, :hint=, :name, :pk_factory]
@@ -26,5 +28,13 @@ describe 'Montgomery::Collection' do
   it 'should return subcollection' do
     @mongo_collection.expects(:[]).with('montgomerish')
     @collection['montgomerish'].should.be.an.instance_of(Montgomery::Collection)
+  end
+
+  it 'should return database' do
+    @collection.database.should.equal @database
+  end
+
+  it 'should raise exception when calling #db' do
+    lambda { @collection.db }.should.raise(RuntimeError)
   end
 end
