@@ -12,8 +12,8 @@ describe 'Montgomery::Collection' do
 
   delegated_properties = [:hint, :hint=, :name, :pk_factory]
   delegated_methods = [:count, :create_index, :distinct, :drop, :drop_index,
-    :drop_indexes, :group, :index_information, :map_reduce, :options, :rename,
-    :stats]
+    :drop_indexes, :group, :index_information, :map_reduce, :mapreduce,
+    :options, :rename, :stats]
 
   (delegated_properties + delegated_methods).each do |message|
     it "should delegate #{message} to Mongo::Collection" do

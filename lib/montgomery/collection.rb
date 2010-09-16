@@ -10,7 +10,8 @@ class Montgomery::Collection
 
   # methods
   delegate :count, :create_index, :distinct, :drop, :drop_index, :drop_indexes,
-           :group, :index_information, :map_reduce, :options, :rename, :stats
+           :group, :index_information, :map_reduce, :mapreduce, :options,
+           :rename, :stats
 
   def initialize(values)
     @mongo_collection = values[:mongo_collection]
@@ -41,6 +42,8 @@ class Montgomery::Collection
   def insert(*args)
     raise 'Not implemented'
   end
+
+  alias_method :<<, :insert
 
   def remove(*args)
     raise 'Not implemented'
