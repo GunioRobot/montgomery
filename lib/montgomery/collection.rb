@@ -41,12 +41,12 @@ class Montgomery::Collection
 
   def find_and_modify(options={})
     doc = @mongo_collection.find_and_modify(options)
-    self.class.doc_to_entity(doc)
+    Montgomery::Entity.from_doc(doc)
   end
 
   def find_one(spec_or_object_id=nil, options={})
     doc = @mongo_collection.find_one(spec_or_object_id, options)
-    self.class.doc_to_entity(doc)
+    Montgomery::Entity.from_doc(doc)
   end
 
   def insert(entity_or_entities, options={})
@@ -80,14 +80,6 @@ class Montgomery::Collection
   end
 
   private
-
-  def self.doc_to_entity(doc)
-    return unless doc
-
-    klass_name = doc.delete('_class')
-    klass = Kernel.const_get(klass_name)
-    klass.new(doc)
-  end
 
   def to_array(object_or_objects)
     object_or_objects.kind_of?(Array) ? object_or_objects : [object_or_objects]
