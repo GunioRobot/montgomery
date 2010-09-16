@@ -141,5 +141,23 @@ describe 'Montgomery::Collection' do
       @collection.update({'name' => 'Hubert'},
                          {'$set' => {'name' => 'Wojciech'}})
     end
+
+    it 'should find entities without a block' do
+      selector = {name: 'Wojciech'}
+      cursor = mock('Mongo::Cursor')
+      @mongo_collection.expects(:find).with(selector, {}).returns(cursor)
+
+      @collection.find(selector).should.be.instance_of Montgomery::Cursor
+    end
+
+    it 'should find entities with a block' do
+      selector = {name: 'Wojciech'}
+      cursor = mock('Mongo::Cursor')
+      @mongo_collection.expects(:find).with(selector, {}).yields(cursor)
+
+      @collection.find(selector) do |cursor|
+        cursor.should.be.instance_of Montgomery::Cursor
+      end
+    end
   end
 end

@@ -27,8 +27,16 @@ class Montgomery::Collection
     raise 'Use #database instead of #db'
   end
 
-  def find(*args)
-    raise 'Not implemented'
+  def find(selector={}, options={}, &block)
+    if block
+      @mongo_collection.find(selector, options) do |mongo_cursor|
+        montgomery_cursor = Montgomery::Cursor.new(mongo_cursor)
+        block.call(montgomery_cursor)
+      end
+    else
+      mongo_cursor = @mongo_collection.find(selector, options)
+      Montgomery::Cursor.new(mongo_cursor)
+    end
   end
 
   def find_and_modify(options={})
