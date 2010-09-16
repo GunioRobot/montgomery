@@ -41,8 +41,14 @@ class Montgomery::Collection
     self.class.doc_to_entity(doc)
   end
 
-  def insert(*args)
-    raise 'Not implemented'
+  def insert(entity_or_entities, options={})
+    entities = to_array(entity_or_entities)
+    docs = entities.map(&:to_montgomery_doc)
+    id_or_ids = @mongo_collection.insert(docs, options)
+    ids = to_array(id_or_ids)
+    entities.each_with_index do |entity, index|
+      entity.instance_variable_set(:@_id, ids[index])
+    end
   end
 
   alias_method :<<, :insert
@@ -67,5 +73,9 @@ class Montgomery::Collection
     klass_name = doc.delete('_class')
     klass = Kernel.const_get(klass_name)
     klass.new(doc)
+  end
+
+  def to_array(object_or_objects)
+    object_or_objects.kind_of?(Array) ? object_or_objects : [object_or_objects]
   end
 end

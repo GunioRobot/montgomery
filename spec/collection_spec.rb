@@ -74,5 +74,29 @@ describe 'Montgomery::Collection' do
       entity.should.be.instance_of(User)
       entity.instance_variable_get(:@name).should.equal('Wojciech')
     end
+
+    it 'should insert an entity' do
+      id = BSON::ObjectId.from_time(Time.now)
+      @mongo_collection.expects(:insert).with([@doc], {}).returns(id)
+
+      user = User.new name: 'Wojciech'
+      @collection.insert(user)
+      user._id.should.equal id
+    end
+
+    it 'should insert 2 entities' do
+      doc1 = @doc
+      doc2 = {'name' => 'Hubert', '_class' => 'User'}
+      id1 = BSON::ObjectId.from_time(Time.now)
+      id2 = BSON::ObjectId.from_time(Time.now)
+      @mongo_collection.expects(:insert).with([doc1, doc2], {}).
+        returns([id1, id2])
+
+      user1 = User.new name: 'Wojciech'
+      user2 = User.new name: 'Hubert'
+      @collection.insert([user1, user2])
+      user1._id.should.eql id1
+      user2._id.should.eql id2
+    end
   end
 end
