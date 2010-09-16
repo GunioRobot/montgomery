@@ -6,9 +6,10 @@ When an object is fetched from the MongoDB we set its instance variables based o
 
 Instead of polluting your objects and classes with a myriad of DB-related methods (like #save, .find, etc) we have here 2 kinds of objects: entities and collections. Please take a peek into /examples dir.
 
+
 Installation
 
-Currently there's no gem, so just clone the repo.
+Ruby 1.9.2 is currently supported. ATM there's no gem, so just clone the repo.
 
 Usage
 
