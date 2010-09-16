@@ -89,8 +89,9 @@ describe 'Montgomery::Collection' do
       doc2 = {'name' => 'Hubert', '_class' => 'User'}
       id1 = BSON::ObjectId.from_time(Time.now)
       id2 = BSON::ObjectId.from_time(Time.now)
-      @mongo_collection.expects(:insert).with([doc1, doc2], {}).
-        returns([id1, id2])
+      @mongo_collection.expects(:insert).
+                        with([doc1, doc2], {}).
+                        returns([id1, id2])
 
       user1 = User.new name: 'Wojciech'
       user2 = User.new name: 'Hubert'
