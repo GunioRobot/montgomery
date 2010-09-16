@@ -66,8 +66,9 @@ class Montgomery::Collection
     id
   end
 
-  def update(*args)
-    raise 'Not implemented'
+  def update(selector_or_entity_or_entities, document, options={})
+    selector = to_selector(selector_or_entity_or_entities)
+    @mongo_collection.update(selector, document, options)
   end
 
   private

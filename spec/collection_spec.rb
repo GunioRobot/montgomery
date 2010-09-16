@@ -131,5 +131,15 @@ describe 'Montgomery::Collection' do
       user.name = 'Hubert'
       @collection.save(user).should.equal id
     end
+
+    it 'should update the collection' do
+      id = BSON::ObjectId.from_time(Time.now)
+      @mongo_collection.expects(:update).
+                        with({'name' => 'Hubert'},
+                          {'$set' => {'name' => 'Wojciech'}}, {})
+
+      @collection.update({'name' => 'Hubert'},
+                         {'$set' => {'name' => 'Wojciech'}})
+    end
   end
 end
