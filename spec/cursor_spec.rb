@@ -66,6 +66,10 @@ describe 'Montgomery::Cursor' do
     @cursor.collection.should.equal @collection
   end
 
+  it 'should return a Mongo::Cursor' do
+    @cursor.to_mongo.should.be.instance_of Mongo::Cursor
+  end
+
   delegated_properties = [:batch_size, :fields, :full_collection_name, :hint,
     :order, :selector, :snapshot, :timeout]
   delegated_methods = [:close, :closed?, :count, :explain, :has_next?, :inspect,

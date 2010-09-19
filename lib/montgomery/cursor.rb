@@ -35,4 +35,8 @@ class Montgomery::Cursor
     docs = @mongo_cursor.to_a
     docs.map { |doc| Montgomery::Entity.from_doc(doc) }
   end
+
+  def to_mongo
+    @mongo_cursor
+  end
 end
