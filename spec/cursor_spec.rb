@@ -23,4 +23,19 @@ describe 'Montgomery::Cursor' do
     users[1].name.should.equal 'Wojciech'
     users[1]._id.should.equal id2
   end
+
+  delegated_properties = [:batch_size, :fields, :full_collection_name, :hint,
+    :order, :selector, :snapshot, :timeout]
+  delegated_methods = [:close, :closed?, :count, :explain, :has_next?, :inspect,
+    :limit, :query_options_hash, :query_opts, :rewind!, :skip, :sort]
+
+  (delegated_properties + delegated_methods).each do |message|
+    it "should delegate #{message} to Mongo::Cursor" do
+      @mongo_cursor.expects(message)
+      @cursor.send(message)
+
+      @mongo_cursor.expects(message).with(:args)
+      @cursor.send(message, :args)
+    end
+  end
 end
