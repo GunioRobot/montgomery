@@ -18,4 +18,4 @@ require 'montgomery'
 
 Examples
 
-Please take a look in /examples directory and /spec. Note: examples they require a working MongoDB.
+Please take a look in /example directory and /spec. Note: examples require a running MongoDB.
