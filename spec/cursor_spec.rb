@@ -74,6 +74,20 @@ describe 'Montgomery::Cursor' do
     @cursor.to_mongo.should.be.instance_of Mongo::Cursor
   end
 
+  instance_methods = Mongo::Cursor.public_instance_methods - Mongo::Conversions.public_instance_methods
+  instance_methods.each do |method|
+    it "should respond to instance method '#{method}'" do
+      @cursor.should.respond_to(method)
+    end
+  end
+
+  class_methods = Mongo::Cursor.public_methods
+  class_methods.each do |method|
+    it "should respond to class method '#{method}'" do
+      Montgomery::Cursor.should.respond_to(method)
+    end
+  end
+
   delegated_properties = [:batch_size, :fields, :full_collection_name, :hint,
     :order, :selector, :snapshot, :timeout]
   delegated_methods = [:close, :closed?, :count, :explain, :has_next?, :inspect,
