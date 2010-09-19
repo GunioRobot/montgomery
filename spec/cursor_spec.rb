@@ -43,6 +43,25 @@ describe 'Montgomery::Cursor' do
     @cursor.next_entity.should.be.instance_of User
   end
 
+  it 'should iterate over the entities' do
+    id1 = Factory.mongo_object_id
+    id2 = Factory.mongo_object_id
+    docs = [
+      {'_id' => id1, 'name' => 'Hubert', '_class' => 'User'},
+      {'_id' => id2, 'name' => 'Wojciech', '_class' => 'User'}
+    ]
+    @mongo_cursor.expects(:each).yields(*docs)
+
+    index = 0
+    @cursor.each do |entity|
+      entity.should.be.instance_of User
+      entity.name.should.equal docs[index]['name']
+      entity._id.should.equal docs[index]['_id']
+
+      index += 1
+    end
+  end
+
   it 'should return collection' do
     @cursor.collection.should.equal @collection
   end

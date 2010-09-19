@@ -16,6 +16,12 @@ class Montgomery::Cursor
     @collection = values[:collection]
   end
 
+  def each
+    @mongo_cursor.each do |doc|
+      yield Montgomery::Entity.from_doc(doc)
+    end
+  end
+
   def next_document
     raise 'Use #next_entity instead of #next_document'
   end
