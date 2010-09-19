@@ -3,6 +3,7 @@ module Montgomery
   autoload :Connection, 'montgomery/connection'
   autoload :Cursor, 'montgomery/cursor'
   autoload :Database, 'montgomery/database'
+  autoload :Delegator, 'montgomery/delegator'
   autoload :Entity, 'montgomery/entity'
   autoload :Silencer, 'montgomery/silencer'
 end

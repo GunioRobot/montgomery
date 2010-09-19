@@ -1,17 +1,15 @@
 class Montgomery::Collection
-  autoload :Delegator, 'montgomery/collection/delegator'
-
-  include Montgomery::Collection::Delegator
+  include Montgomery::Delegator
 
   attr_reader :database
 
   # properties
-  delegate :hint, :hint=, :name, :pk_factory
+  delegate :hint, :hint=, :name, :pk_factory, to: :mongo_collection
 
   # methods
   delegate :count, :create_index, :distinct, :drop, :drop_index, :drop_indexes,
            :group, :index_information, :map_reduce, :mapreduce, :options,
-           :rename, :stats
+           :rename, :stats, to: :mongo_collection
 
   def initialize(values)
     @mongo_collection = values[:mongo_collection]
