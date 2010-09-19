@@ -28,6 +28,21 @@ describe 'Montgomery::Cursor' do
     users[1]._id.should.equal id2
   end
 
+  it 'should raise exception on #next_document' do
+    lambda { @cursor.next_document }.should.raise(RuntimeError)
+  end
+
+  it 'should return next entity' do
+    doc = {
+      '_id' => Factory.mongo_object_id,
+      'name' => 'Wojciech',
+      '_class' => 'User'
+    }
+    @mongo_cursor.expects(:next_document).returns(doc)
+
+    @cursor.next_entity.should.be.instance_of User
+  end
+
   it 'should return collection' do
     @cursor.collection.should.equal @collection
   end

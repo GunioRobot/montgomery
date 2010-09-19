@@ -16,6 +16,15 @@ class Montgomery::Cursor
     @collection = values[:collection]
   end
 
+  def next_document
+    raise 'Use #next_entity instead of #next_document'
+  end
+
+  def next_entity
+    doc = @mongo_cursor.next_document
+    Montgomery::Entity.from_doc(doc)
+  end
+
   def to_a
     docs = @mongo_cursor.to_a
     docs.map { |doc| Montgomery::Entity.from_doc(doc) }
