@@ -11,6 +11,8 @@ class Montgomery::Collection
            :group, :index_information, :map_reduce, :mapreduce, :options,
            :rename, :stats, to: :mongo_collection
 
+  alias_method :size, :count
+
   def initialize(values)
     @mongo_collection = values[:mongo_collection]
     @database = values[:database]

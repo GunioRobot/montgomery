@@ -1,6 +1,21 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Collection' do
+
+  instance_methods = Mongo::Collection.public_instance_methods
+  instance_methods.each do |method|
+    it "should respond to instance method '#{method}'" do
+      @collection.should.respond_to method
+    end
+  end
+
+  class_methods = Mongo::Collection.public_methods
+  class_methods.each do |method|
+    it "should respond to class method '#{method}'" do
+      Montgomery::Collection.should.respond_to method
+    end
+  end
+
   before do
     mongo_connection = Mongo::Connection.new
     mongo_database = mongo_connection.db('montgomery')
