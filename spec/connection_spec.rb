@@ -1,9 +1,29 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Connection' do
-  it 'should try to connect to MongoDB' do
+  it 'should try to connect to MongoDB with .new' do
     Mongo::Connection.expects(:new)
     Montgomery::Connection.new
+
+    Mongo::Connection.expects(:new).with('localhost', 1234, test: true)
+    Montgomery::Connection.new('localhost', 1234, test: true)
+  end
+
+  it 'should try to connect to MongoDB with .from_uri' do
+    Mongo::Connection.expects(:from_uri).with('mongodb://host', {})
+    Montgomery::Connection.from_uri('mongodb://host')
+  end
+
+  it 'should try to connect to MongoDB with .multi' do
+    nodes = [["db1.example.com", 27017], ["db2.example.com", 27017]]
+    Mongo::Connection.expects(:multi).with(nodes, {})
+    Montgomery::Connection.multi(nodes)
+  end
+
+  it 'should try to connect to MongoDB with .paired' do
+    nodes = [["db1.example.com", 27017], ["db2.example.com", 27017]]
+    Mongo::Connection.expects(:paired).with(nodes, {})
+    Montgomery::Connection.paired(nodes)
   end
 
   describe 'when connected' do

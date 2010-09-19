@@ -14,6 +14,18 @@ class Montgomery::Connection
       :remove_auth, :send_message, :send_message_with_safe_check, :server_info,
       :server_version, :slave_ok?, to: :mongo_connection
 
+  def self.from_uri(uri, options={})
+    @mongo_connection = Mongo::Connection.from_uri(uri, options)
+  end
+
+  def self.multi(nodes, options={})
+    @mongo_connection = Mongo::Connection.multi(nodes, options)
+  end
+
+  def self.paired(nodes, options={})
+    @mongo_connection = Mongo::Connection.paired(nodes, options)
+  end
+
   def initialize(host=nil, port=nil, options={})
     @mongo_connection = Mongo::Connection.new(host, port, options)
   end
