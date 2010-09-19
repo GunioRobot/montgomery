@@ -4,9 +4,13 @@ describe 'Montgomery::Cursor' do
   before do
     mongo_connection = Mongo::Connection.new
     mongo_database = mongo_connection.db('montgomery')
+    database = Montgomery::Database.new(mongo_database)
     mongo_collection = mongo_database.collection('items')
+    @collection = Montgomery::Collection.new(mongo_collection: mongo_collection,
+      database: database)
     @mongo_cursor = mongo_collection.find
-    @cursor = Montgomery::Cursor.new(@mongo_cursor)
+    values = {mongo_cursor: @mongo_cursor, collection: @collection}
+    @cursor = Montgomery::Cursor.new(values)
   end
 
   it 'should return all entities' do
@@ -22,6 +26,10 @@ describe 'Montgomery::Cursor' do
     users[0]._id.should.equal id1
     users[1].name.should.equal 'Wojciech'
     users[1]._id.should.equal id2
+  end
+
+  it 'should return collection' do
+    @cursor.collection.should.equal @collection
   end
 
   delegated_properties = [:batch_size, :fields, :full_collection_name, :hint,

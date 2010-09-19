@@ -28,12 +28,14 @@ class Montgomery::Collection
   def find(selector={}, options={}, &block)
     if block
       @mongo_collection.find(selector, options) do |mongo_cursor|
-        montgomery_cursor = Montgomery::Cursor.new(mongo_cursor)
+        values = {mongo_cursor: mongo_cursor, collection: self}
+        montgomery_cursor = Montgomery::Cursor.new(values)
         block.call(montgomery_cursor)
       end
     else
       mongo_cursor = @mongo_collection.find(selector, options)
-      Montgomery::Cursor.new(mongo_cursor)
+      values = {mongo_cursor: mongo_cursor, collection: self}
+      Montgomery::Cursor.new(values)
     end
   end
 
