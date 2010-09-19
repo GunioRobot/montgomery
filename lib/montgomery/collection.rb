@@ -53,7 +53,7 @@ class Montgomery::Collection
 
   def insert(entity_or_entities, options={})
     entities = to_array(entity_or_entities)
-    docs = entities.map(&:to_montgomery_doc)
+    docs = entities.map { |entity| Montgomery::Entity.to_doc(entity) }
     id_or_ids = @mongo_collection.insert(docs, options)
     ids = to_array(id_or_ids)
     entities.each_with_index do |entity, index|
@@ -70,7 +70,7 @@ class Montgomery::Collection
   end
 
   def save(entity, options={})
-    doc = entity.to_montgomery_doc
+    doc = Montgomery::Entity.to_doc(entity)
     id = @mongo_collection.save(doc, options)
     doc.instance_variable_set(:@_id, id)
     id

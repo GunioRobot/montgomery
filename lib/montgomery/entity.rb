@@ -10,14 +10,14 @@ module Montgomery::Entity
     end
   end
 
-  def to_montgomery_doc
+  def self.to_doc(entity)
     doc = {}
-    instance_variables.each do |var|
+    entity.instance_variables.each do |var|
       key = var.to_s.gsub('@', '')
-      value = instance_variable_get(var)
+      value = entity.instance_variable_get(var)
       doc[key] = value
     end
-    doc['_class'] = self.class.to_s
+    doc['_class'] = entity.class.to_s
     # _id == nil will cause MongoDB to insert without setting ObjectId
     doc.delete('_id') unless doc['_id']
     doc

@@ -3,7 +3,10 @@ require 'montgomery'
 
 gem 'test-unit'
 require 'test/spec'
-Montgomery::Silencer.silently { require 'mocha' }
+Montgomery::Silencer.silently {
+  require 'mocha'
+  require 'faker'
+}
 
 require 'pp'
 
