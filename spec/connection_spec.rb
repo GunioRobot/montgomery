@@ -1,6 +1,13 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Connection' do
+  class_methods = Mongo::Connection.public_methods
+  class_methods.each do |method|
+    it "should respond to class method '#{method}'" do
+      Montgomery::Connection.should.respond_to method
+    end
+  end
+
   it 'should try to connect to MongoDB with .new' do
     Mongo::Connection.expects(:new)
     Montgomery::Connection.new
@@ -31,6 +38,13 @@ describe 'Montgomery::Connection' do
       @connection = Montgomery::Connection.new
     end
 
+    instance_methods = Mongo::Connection.public_instance_methods
+    instance_methods.each do |method|
+      it "should respond to instance method '#{method}'" do
+        @connection.should.respond_to method
+      end
+    end
+
     it 'should return a Mongo::Connection' do
       @connection.to_mongo.should.be.instance_of Mongo::Connection
     end
@@ -50,25 +64,6 @@ describe 'Montgomery::Connection' do
     it 'should return a database from #[]' do
       database = @connection['montgomery']
       database.should.be.an.instance_of(Montgomery::Database)
-    end
-
-    delegated_properties = [:arbiters, :auths, :checked_out, :host, :logger,
-      :nodes, :port, :primary, :secondaries, :size, :sockets]
-    delegated_methods = [:add_auth, :apply_saved_authentication, :clear_auths,
-      :close, :connect, :connect_to_master, :connected?, :copy_database,
-      :database_info, :database_names, :drop_database, :format_pair,
-      :get_request_id, :pair_val_to_connection, :parse_uri, :receive_message,
-      :remove_auth, :send_message, :send_message_with_safe_check, :server_info,
-      :server_version, :slave_ok?]
-
-    (delegated_properties + delegated_methods).each do |message|
-      it "should delegate #{message} to Mongo::Collection" do
-        Mongo::Connection.any_instance.expects(message)
-        @connection.send(message)
-
-        Mongo::Connection.any_instance.expects(message).with(:args)
-        @connection.send(message, :args)
-      end
     end
   end
 end
