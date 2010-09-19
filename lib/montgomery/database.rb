@@ -7,4 +7,8 @@ class Montgomery::Database
     Montgomery::Collection.new mongo_collection: @mongo_database.collection(name),
                                database: self
   end
+
+  def to_mongo
+    @mongo_database
+  end
 end

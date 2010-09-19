@@ -43,6 +43,10 @@ describe 'Montgomery::Collection' do
       lambda { @collection.db }.should.raise(RuntimeError)
     end
 
+    it 'should return a Mongo::Collection' do
+      @collection.to_mongo.should.be.instance_of Mongo::Collection
+    end
+
     describe 'empty' do
       it 'should return nil from #find_one' do
         @mongo_collection.expects(:find_one).with(nil, {}).returns(nil)

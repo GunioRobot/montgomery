@@ -86,6 +86,10 @@ class Montgomery::Collection
     "<Montgomery::Collection:0x#{object_id.to_s(16)} @name=#{name.inspect}>"
   end
 
+  def to_mongo
+    @mongo_collection
+  end
+
   private
 
   def to_array(object_or_objects)

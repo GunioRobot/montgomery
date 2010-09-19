@@ -12,4 +12,8 @@ describe 'Montgomery::Database' do
     collection.should.be.an.instance_of(Montgomery::Collection)
     collection.name.should.equal('items')
   end
+
+  it 'should return a Mongo::Database' do
+    @database.to_mongo.should.be.instance_of Mongo::DB
+  end
 end
