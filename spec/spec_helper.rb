@@ -11,7 +11,7 @@ $LOAD_PATH.unshift 'spec/entities'
 require 'user'
 
 module Factory
-  def self.object_id
+  def self.mongo_object_id
     BSON::ObjectId.from_time(Time.now)
   end
 end

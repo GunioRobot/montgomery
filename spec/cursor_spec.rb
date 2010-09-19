@@ -10,8 +10,8 @@ describe 'Montgomery::Cursor' do
   end
 
   it 'should return all entities' do
-    id1 = Factory.object_id
-    id2 = Factory.object_id
+    id1 = Factory.mongo_object_id
+    id2 = Factory.mongo_object_id
     @mongo_cursor.expects(:to_a).returns([
       {'_id' => id1, 'name' => 'Hubert', '_class' => 'User'},
       {'_id' => id2, 'name' => 'Wojciech', '_class' => 'User'}

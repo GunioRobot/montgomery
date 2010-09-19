@@ -72,7 +72,7 @@ describe 'Montgomery::Collection' do
     end
 
     it 'should insert an entity' do
-      id = Factory.object_id
+      id = Factory.mongo_object_id
       @mongo_collection.expects(:insert).with([@doc], {}).returns(id)
 
       user = User.new name: 'Wojciech'
@@ -83,8 +83,8 @@ describe 'Montgomery::Collection' do
     it 'should insert 2 entities' do
       doc1 = @doc
       doc2 = {'name' => 'Hubert', '_class' => 'User'}
-      id1 = Factory.object_id
-      id2 = Factory.object_id
+      id1 = Factory.mongo_object_id
+      id2 = Factory.mongo_object_id
       @mongo_collection.expects(:insert).
                         with([doc1, doc2], {}).
                         returns([id1, id2])
@@ -111,7 +111,7 @@ describe 'Montgomery::Collection' do
     end
 
     it 'should remove existing entity' do
-      user_id = Factory.object_id
+      user_id = Factory.mongo_object_id
       user = User.new({_id: user_id})
       @mongo_collection.expects(:remove).
                         with({_id: {'$in' => [user_id]}}, {}).
@@ -121,7 +121,7 @@ describe 'Montgomery::Collection' do
     end
 
     it 'should save the entity' do
-      id = Factory.object_id
+      id = Factory.mongo_object_id
       @mongo_collection.expects(:save).with({
         '_id' => id,
         'name' => 'Hubert',
@@ -133,7 +133,7 @@ describe 'Montgomery::Collection' do
     end
 
     it 'should update the collection' do
-      id = Factory.object_id
+      id = Factory.mongo_object_id
       @mongo_collection.expects(:update).
                         with({'name' => 'Hubert'},
                           {'$set' => {'name' => 'Wojciech'}}, {})
@@ -152,8 +152,8 @@ describe 'Montgomery::Collection' do
 
     it 'should find entities with a block' do
       selector = {name: 'Wojciech'}
-      cursor = mock('Mongo::Cursor')
-      @mongo_collection.expects(:find).with(selector, {}).yields(cursor)
+      mongo_cursor = mock('Mongo::Cursor')
+      @mongo_collection.expects(:find).with(selector, {}).yields(mongo_cursor)
 
       @collection.find(selector) do |cursor|
         cursor.should.be.instance_of Montgomery::Cursor
