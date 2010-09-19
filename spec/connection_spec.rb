@@ -31,6 +31,10 @@ describe 'Montgomery::Connection' do
       @connection = Montgomery::Connection.new
     end
 
+    it 'should return a Mongo::Connection' do
+      @connection.to_mongo.should.be.instance_of Mongo::Connection
+    end
+
     it 'should return a database from #database' do
       options = {test: true}
       Mongo::Connection.any_instance.expects(:db).with('montgomery', options)

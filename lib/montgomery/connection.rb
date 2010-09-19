@@ -41,4 +41,8 @@ class Montgomery::Connection
   def [](name)
     Montgomery::Database.new @mongo_connection[name]
   end
+
+  def to_mongo
+    @mongo_connection
+  end
 end
