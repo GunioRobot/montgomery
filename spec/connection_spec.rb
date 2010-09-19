@@ -35,6 +35,9 @@ describe 'Montgomery::Connection' do
 
   describe 'when connected' do
     before do
+      @mongo_connection = mock('Mongo::Connection')
+      Mongo::Connection.stubs(:new).returns(@mongo_connection)
+
       @connection = Montgomery::Connection.new
     end
 
@@ -46,12 +49,12 @@ describe 'Montgomery::Connection' do
     end
 
     it 'should return a Mongo::Connection' do
-      @connection.to_mongo.should.be.instance_of Mongo::Connection
+      @connection.to_mongo.should.equal @mongo_connection
     end
 
     it 'should return a database from #database' do
       options = {test: true}
-      Mongo::Connection.any_instance.expects(:db).with('montgomery', options)
+      @mongo_connection.expects(:db).with('montgomery', options).returns(stub)
 
       database = @connection.database('montgomery', options)
       database.should.be.an.instance_of(Montgomery::Database)
@@ -62,6 +65,8 @@ describe 'Montgomery::Connection' do
     end
 
     it 'should return a database from #[]' do
+      @mongo_connection.expects(:[]).returns(stub)
+
       database = @connection['montgomery']
       database.should.be.an.instance_of(Montgomery::Database)
     end
