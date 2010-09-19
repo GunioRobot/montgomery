@@ -11,13 +11,21 @@ describe 'Montgomery::Connection' do
       @connection = Montgomery::Connection.new
     end
 
-    it 'should return a database' do
-      database = @connection.database('montgomery')
+    it 'should return a database from #database' do
+      options = {test: true}
+      Mongo::Connection.any_instance.expects(:db).with('montgomery', options)
+
+      database = @connection.database('montgomery', options)
       database.should.be.an.instance_of(Montgomery::Database)
     end
 
     it 'should raise exception when calling #db' do
       lambda { @connection.db('montgomery') }.should.raise(RuntimeError)
+    end
+
+    it 'should return a database from #[]' do
+      database = @connection['montgomery']
+      database.should.be.an.instance_of(Montgomery::Database)
     end
 
     delegated_properties = [:arbiters, :auths, :checked_out, :host, :logger,

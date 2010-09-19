@@ -18,11 +18,15 @@ class Montgomery::Connection
     @mongo_connection = Mongo::Connection.new(host, port, options)
   end
 
-  def database(name)
-    Montgomery::Database.new @mongo_connection.db(name)
+  def database(name, options={})
+    Montgomery::Database.new @mongo_connection.db(name, options)
   end
 
   def db(name)
     raise 'Use #database instead of #db'
+  end
+
+  def [](name)
+    Montgomery::Database.new @mongo_connection[name]
   end
 end
