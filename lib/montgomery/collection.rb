@@ -79,6 +79,11 @@ class Montgomery::Collection
     @mongo_collection.update(selector, document, options)
   end
 
+  # Clean output for inspect.
+  def inspect
+    "<Montgomery::Collection:0x#{object_id.to_s(16)} @name=#{name.inspect}>"
+  end
+
   private
 
   def to_array(object_or_objects)
