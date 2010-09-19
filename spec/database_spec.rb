@@ -10,5 +10,6 @@ describe 'Montgomery::Database' do
   it 'should return a collection' do
     collection = @database.collection('items')
     collection.should.be.an.instance_of(Montgomery::Collection)
+    collection.name.should.equal('items')
   end
 end
