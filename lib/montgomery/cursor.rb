@@ -1,4 +1,5 @@
 class Montgomery::Cursor
+  include Enumerable
   include Montgomery::Delegator
 
   attr_reader :collection

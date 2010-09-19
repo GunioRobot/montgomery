@@ -13,6 +13,10 @@ describe 'Montgomery::Cursor' do
     @cursor = Montgomery::Cursor.new(values)
   end
 
+  it 'should include Enumerable' do
+    Montgomery::Cursor.should.include Enumerable
+  end
+
   it 'should return all entities' do
     id1 = Factory.mongo_object_id
     id2 = Factory.mongo_object_id
