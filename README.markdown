@@ -28,10 +28,12 @@ Ruby 1.9.2 is currently supported. ATM there's no gem, so just clone the repo.
 Usage
 -----
 
+`
 $LOAD_PATH.unshift '/path_to_montgomery/lib'
 require 'montgomery'
-
+`
 
 Examples
+--------
 
 Please take a look in /example directory and /spec. Note: examples require a running MongoDB.
