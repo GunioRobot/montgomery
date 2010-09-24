@@ -1,0 +1,1 @@
+All the basic features are here. Only fields with BSON-supported objects can be persisted at this point, though it should be not hard to add embedded documents persistence. I didn't get to experimenting with handling automatic updates of objects when doing the same on the DB.
