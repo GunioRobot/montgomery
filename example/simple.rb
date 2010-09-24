@@ -6,31 +6,52 @@ $LOAD_PATH.unshift 'lib'
 require 'montgomery'
 
 class User
- include Montgomery::Entity
+  # This class is saveable to the database
+  include Montgomery::Entity
 
- attr_reader :email
+  # Add an #email method (similar to attr_reader) and tell Montgomery
+  # that it should save the output of #email to the database
+  montgomery_attr_reader :email
+  # Add #role and #role= (like attr_accessor) and save output of role to the
+  # database
+  montgomery_attr_accessor :role
 
- def places
-   Places.find({user_id: @_id})
- end
+  # Initialize must accept a hash coming from MongoDB, it's up to you to
+  # setup your object.
+  # #id and #id= will be added automatically to handle BSON::ObjectId. #id= is
+  # called after #initialize is done.
+  def initialize(values={})
+    @email = values['email']
+    @role = values['role']
+  end
+
+  def places
+    Places.find({user_id: id})
+  end
 end
 
 class Place
- include Montgomery::Entity
+  include Montgomery::Entity
 
- attr_accessor :name, :city, :district
+  montgomery_attr_reader :name, :city, :district, :user_id
 
- # someday some helpers might be added, like AR's belongs_to and has*
- def user
-   Users.find_one({_id: @user_id})
- end
+  def initialize(values={})
+    @name = values['name']
+    @city = values['city']
+    @district = values['district']
+  end
 
- def user=(user)
-   @user_id = user._id
- end
+  # Someday some helpers might be added, like AR's belongs_to and has*
+  def user
+    Users.find_one({id: @user_id})
+  end
+
+  def user=(user)
+    @user_id = user.id
+  end
 end
 
-# assign collections to class-looking constants
+# assign collections to class-like constants
 database = Montgomery::Connection.new.database('montgomery')
 Users = database.collection('users')
 Places = database.collection('places')
@@ -40,7 +61,7 @@ Users.drop
 Places.drop
 
 # instantiate a user
-user = User.new(email: 'wojciech@piekutowski.net', password: 'foobar')
+user = User.new('email' => 'wojciech@piekutowski.net', 'password' => 'foobar')
 pp user #=> a plain Ruby object, with @email=wojciech@piekutowski.net, @password=foobar and MongoDB's @_id
 pp user.places #=> returns DB cursor
 pp user.email #=> wojciech@piekutowski.net
@@ -48,16 +69,16 @@ pp user.email #=> wojciech@piekutowski.net
 
 # store the user in the DB
 Users.insert user
-pp user._id #=> MongoDB document id
+pp user.id #=> MongoDB document id
 
 pp Users.count #=> 1
 pp user.places.to_a #=> []
 
 # create some places
 my_places = []
-my_places << Place.new(name: 'ABC', user_id: user._id, city: 'Białystok', district: 'Centrum')
-my_places << Place.new(name: 'Empik', user_id: user._id, city: 'Białystok', district: 'Śródmieście')
-my_places << Place.new(name: 'Savona', user_id: user._id, city: 'Białystok', district: 'Śródmieście')
+my_places << Place.new('name' => 'ABC', 'user_id' => user.id, 'city' => 'Białystok', 'district' => 'Centrum')
+my_places << Place.new('name' => 'Empik', 'user_id' => user.id, 'city' => 'Białystok', 'district' => 'Śródmieście')
+my_places << Place.new('name' => 'Savona', 'user_id' => user.id, 'city' => 'Białystok', 'district' => 'Śródmieście')
 my_places.each { |place| Places.insert place }
 
 pp user.places.to_a

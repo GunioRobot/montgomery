@@ -101,7 +101,7 @@ class Montgomery::Collection
       selector_or_entity_or_entities
     else
       entities = to_array(selector_or_entity_or_entities)
-      ids = entities.map { |entity| entity._id }
+      ids = entities.map(&:_id)
       {_id: {'$in' => ids}}
     end
   end

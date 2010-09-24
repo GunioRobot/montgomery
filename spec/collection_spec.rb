@@ -69,7 +69,7 @@ describe 'Montgomery::Collection' do
 
         entity = @collection.find_one
         entity.should.be.instance_of(User)
-        entity.instance_variable_get(:@name).should.equal('Wojciech')
+        entity.name.should.equal('Wojciech')
       end
 
       it 'should find_and_modify entity' do
@@ -77,29 +77,30 @@ describe 'Montgomery::Collection' do
 
         entity = @collection.find_and_modify
         entity.should.be.instance_of(User)
-        entity.instance_variable_get(:@name).should.equal('Wojciech')
+        entity.name.should.equal('Wojciech')
       end
 
       it 'should insert an entity' do
         id = Factory.mongo_object_id
-        @mongo_collection.expects(:insert).with([@doc], {}).returns(id)
+        doc = {:name => 'Wojciech', :_class => 'User'}
+        @mongo_collection.expects(:insert).with([doc], {}).returns(id)
 
-        user = User.new name: 'Wojciech'
+        user = User.new 'name' => 'Wojciech'
         @collection.insert(user).should.equal [id]
         user._id.should.equal id
       end
 
       it 'should insert 2 entities' do
-        doc1 = @doc
-        doc2 = {'name' => 'Hubert', '_class' => 'User'}
+        doc1 = {:name => 'Wojciech', :_class => 'User'}
+        doc2 = {:name => 'Hubert', :_class => 'User'}
         id1 = Factory.mongo_object_id
         id2 = Factory.mongo_object_id
         @mongo_collection.expects(:insert).
                           with([doc1, doc2], {}).
                           returns([id1, id2])
 
-        user1 = User.new name: 'Wojciech'
-        user2 = User.new name: 'Hubert'
+        user1 = User.new 'name' => 'Wojciech'
+        user2 = User.new 'name' => 'Hubert'
         @collection.insert([user1, user2]).should.equal [id1, id2]
         user1._id.should.eql id1
         user2._id.should.eql id2
@@ -121,7 +122,7 @@ describe 'Montgomery::Collection' do
 
       it 'should remove existing entity' do
         user_id = Factory.mongo_object_id
-        user = User.new({_id: user_id})
+        user = User.new({'_id' => user_id})
         @mongo_collection.expects(:remove).
                           with({_id: {'$in' => [user_id]}}, {}).
                           returns(true)
@@ -132,11 +133,11 @@ describe 'Montgomery::Collection' do
       it 'should save the entity' do
         id = Factory.mongo_object_id
         @mongo_collection.expects(:save).with({
-          '_id' => id,
-          'name' => 'Hubert',
-          '_class' => 'User'
+          :_id => id,
+          :name => 'Hubert',
+          :_class => 'User'
         }, {}).returns(id)
-        user = User.new(name: 'Wojciech', _id: id)
+        user = User.new('name' => 'Wojciech', '_id' => id)
         user.name = 'Hubert'
         @collection.save(user).should.equal id
       end

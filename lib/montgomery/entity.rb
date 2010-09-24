@@ -1,12 +1,11 @@
 module Montgomery::Entity
-  attr_reader :_id
+  autoload :Attribute, 'montgomery/entity/attribute'
+  autoload :Id, 'montgomery/entity/id'
 
-  def initialize(doc={})
-    # prevent warnings about unset @_id
-    instance_variable_set(:@_id, nil) unless doc.has_key?('_id')
-
-    doc.each do |key, value|
-      instance_variable_set("@#{key}", value)
+  def self.included(base)
+    base.class_eval do
+      include Montgomery::Entity::Attribute
+      include Montgomery::Entity::Id
     end
   end
 end

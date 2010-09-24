@@ -1,14 +1,12 @@
 module Montgomery::Mapper
   def self.to_doc(entity)
     doc = {}
-    entity.instance_variables.each do |var|
-      key = var.to_s.gsub('@', '')
-      value = entity.instance_variable_get(var)
-      doc[key] = value
+    entity.class.montgomery_attrs.each do |attribute|
+      doc[attribute] = entity.send(attribute)
     end
-    doc['_class'] = entity.class.to_s
+    doc[:_class] = entity.class.to_s
     # _id == nil will cause MongoDB to insert without setting ObjectId
-    doc.delete('_id') unless doc['_id']
+    doc.delete(:_id) unless doc[:_id]
     doc
   end
 
