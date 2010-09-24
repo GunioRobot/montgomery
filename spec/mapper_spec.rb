@@ -17,9 +17,23 @@ describe 'Montgomery::Mapper' do
     mongo_doc = expected_doc.clone
     mongo_doc['_class'] = 'MapperItem'
 
-    MapperItem.expects(:new).with(expected_doc)
+    item_mock = mock
+    item_mock.expects(:_id=).with(mongo_doc['_id'])
+    MapperItem.expects(:new).with(expected_doc).returns(item_mock)
 
     Montgomery::Mapper.from_doc(mongo_doc)
+  end
+
+  it 'should set id to entity from doc' do
+    mongo_doc = {
+      '_id' => Factory.mongo_object_id,
+      'name' => Faker::Lorem.sentence,
+      'weight' => rand(100),
+      '_class' => 'MapperItem'
+    }
+
+    entity = Montgomery::Mapper.from_doc(mongo_doc)
+    entity.id.should.equal(mongo_doc['_id'])
   end
 
   it "shouldn't create entity when doc is nil" do

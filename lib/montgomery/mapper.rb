@@ -15,6 +15,8 @@ module Montgomery::Mapper
 
     klass_name = doc.delete('_class')
     klass = Kernel.const_get(klass_name)
-    klass.new(doc)
+    entity = klass.new(doc)
+    entity.send(:_id=, doc['_id'])
+    entity
   end
 end
