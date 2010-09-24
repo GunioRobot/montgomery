@@ -36,11 +36,11 @@ describe 'Montgomery::Entity' do
 
     Item.expects(:new).with(expected_doc)
 
-    Montgomery::Entity.from_doc(doc)
+    Montgomery::Mapper.from_doc(doc)
   end
 
   it "shouldn't create entity when doc is nil" do
-    Montgomery::Entity.from_doc(nil).should.equal(nil)
+    Montgomery::Mapper.from_doc(nil).should.equal(nil)
   end
 
   it 'should convert entity without _id into Mongo doc' do
@@ -53,7 +53,7 @@ describe 'Montgomery::Entity' do
     expected_doc = doc.clone
     expected_doc['_class'] = 'Item'
 
-    doc = Montgomery::Entity.to_doc(entity)
+    doc = Montgomery::Mapper.to_doc(entity)
     doc.should.equal(expected_doc)
   end
 
@@ -68,7 +68,7 @@ describe 'Montgomery::Entity' do
     expected_doc = doc.clone
     expected_doc['_class'] = 'Item'
 
-    doc = Montgomery::Entity.to_doc(entity)
+    doc = Montgomery::Mapper.to_doc(entity)
     doc.should.equal(expected_doc)
   end
 

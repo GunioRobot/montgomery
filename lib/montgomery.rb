@@ -5,6 +5,7 @@ module Montgomery
   autoload :Database, 'montgomery/database'
   autoload :Delegator, 'montgomery/delegator'
   autoload :Entity, 'montgomery/entity'
+  autoload :Mapper, 'montgomery/mapper'
   autoload :Silencer, 'montgomery/silencer'
 end
 

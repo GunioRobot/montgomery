@@ -43,17 +43,17 @@ class Montgomery::Collection
 
   def find_and_modify(options={})
     doc = @mongo_collection.find_and_modify(options)
-    Montgomery::Entity.from_doc(doc)
+    Montgomery::Mapper.from_doc(doc)
   end
 
   def find_one(spec_or_object_id=nil, options={})
     doc = @mongo_collection.find_one(spec_or_object_id, options)
-    Montgomery::Entity.from_doc(doc)
+    Montgomery::Mapper.from_doc(doc)
   end
 
   def insert(entity_or_entities, options={})
     entities = to_array(entity_or_entities)
-    docs = entities.map { |entity| Montgomery::Entity.to_doc(entity) }
+    docs = entities.map { |entity| Montgomery::Mapper.to_doc(entity) }
     id_or_ids = @mongo_collection.insert(docs, options)
     ids = to_array(id_or_ids)
     entities.each_with_index do |entity, index|
@@ -70,7 +70,7 @@ class Montgomery::Collection
   end
 
   def save(entity, options={})
-    doc = Montgomery::Entity.to_doc(entity)
+    doc = Montgomery::Mapper.to_doc(entity)
     id = @mongo_collection.save(doc, options)
     doc.instance_variable_set(:@_id, id)
     id

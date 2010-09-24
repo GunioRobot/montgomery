@@ -19,7 +19,7 @@ class Montgomery::Cursor
 
   def each
     @mongo_cursor.each do |doc|
-      yield Montgomery::Entity.from_doc(doc)
+      yield Montgomery::Mapper.from_doc(doc)
     end
   end
 
@@ -29,12 +29,12 @@ class Montgomery::Cursor
 
   def next_entity
     doc = @mongo_cursor.next_document
-    Montgomery::Entity.from_doc(doc)
+    Montgomery::Mapper.from_doc(doc)
   end
 
   def to_a
     docs = @mongo_cursor.to_a
-    docs.map { |doc| Montgomery::Entity.from_doc(doc) }
+    docs.map { |doc| Montgomery::Mapper.from_doc(doc) }
   end
 
   def to_mongo
