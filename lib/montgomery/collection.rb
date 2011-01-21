@@ -1,30 +1,16 @@
-class Montgomery::Collection
-  include Montgomery::Delegator
-
+class Montgomery::Collection < DelegateClass(Mongo::Collection)
   attr_reader :database
-
-  # properties
-  delegate :hint, :hint=, :name, :pk_factory, to: :mongo_collection
-
-  # methods
-  delegate :count, :create_index, :distinct, :drop, :drop_index, :drop_indexes,
-           :group, :index_information, :map_reduce, :mapreduce, :options,
-           :rename, :stats, to: :mongo_collection
-
-  alias_method :size, :count
+  alias_method :db, :database
 
   def initialize(values)
     @mongo_collection = values[:mongo_collection]
     @database = values[:database]
+    super(@mongo_collection)
   end
 
   def [](subcollection_name)
     Montgomery::Collection.new mongo_collection: @mongo_collection[subcollection_name],
                                database: @database
-  end
-
-  def db
-    raise 'Use #database instead of #db'
   end
 
   def find(selector={}, options={}, &block)
