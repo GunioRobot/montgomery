@@ -1,11 +1,13 @@
-module Montgomery::Entity
-  autoload :Attribute, 'montgomery/entity/attribute'
-  autoload :Id, 'montgomery/entity/id'
+require 'montgomery/entity/attribute'
+require 'montgomery/entity/id'
 
-  def self.included(base)
-    base.class_eval do
-      include Montgomery::Entity::Attribute
-      include Montgomery::Entity::Id
+module Montgomery
+  module Entity
+    def self.included(base)
+      base.class_eval do
+        include Montgomery::Entity::Attribute
+        include Montgomery::Entity::Id
+      end
     end
   end
 end
