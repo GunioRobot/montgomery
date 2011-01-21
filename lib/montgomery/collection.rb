@@ -58,7 +58,7 @@ class Montgomery::Collection < DelegateClass(Mongo::Collection)
   def save(entity, options={})
     doc = Montgomery::Mapper.to_doc(entity)
     id = @mongo_collection.save(doc, options)
-    doc.instance_variable_set(:@_id, id)
+    entity.send(:_id=, id)
     id
   end
 

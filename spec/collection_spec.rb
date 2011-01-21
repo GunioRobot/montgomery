@@ -127,7 +127,7 @@ describe 'Montgomery::Collection' do
         @collection.remove(user).should eql true
       end
 
-      it 'should save the entity' do
+      it 'should save the entity with id and retain the id' do
         id = Factory.mongo_object_id
         @mongo_collection.should_receive(:save).with({
           :_id => id,
@@ -135,6 +135,17 @@ describe 'Montgomery::Collection' do
           :_class => 'User'
         }, {}) { id }
         user = User.new('name' => 'Wojciech', '_id' => id)
+        user.name = 'Hubert'
+        @collection.save(user).should eql id
+      end
+
+      it 'should save the entity without id and assign an id' do
+        id = Factory.mongo_object_id
+        @mongo_collection.should_receive(:save).with({
+          :name => 'Hubert',
+          :_class => 'User'
+        }, {}) { id }
+        user = User.new('name' => 'Wojciech')
         user.name = 'Hubert'
         @collection.save(user).should eql id
       end
