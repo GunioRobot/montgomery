@@ -5,7 +5,6 @@ Montgomery::Silencer.silently {
   require 'delegate'
 }
 
-require 'montgomery/delegator'
 require 'montgomery/connection'
 require 'montgomery/database'
 require 'montgomery/collection'
