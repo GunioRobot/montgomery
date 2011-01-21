@@ -18,8 +18,8 @@ describe 'Montgomery::Mapper' do
     mongo_doc['_class'] = 'MapperItem'
 
     item_mock = mock
-    item_mock.expects(:_id=).with(mongo_doc['_id'])
-    MapperItem.expects(:new).with(expected_doc).returns(item_mock)
+    item_mock.should_receive(:_id=).with(mongo_doc['_id'])
+    MapperItem.should_receive(:new).with(expected_doc) { item_mock }
 
     Montgomery::Mapper.from_doc(mongo_doc)
   end
@@ -33,11 +33,11 @@ describe 'Montgomery::Mapper' do
     }
 
     entity = Montgomery::Mapper.from_doc(mongo_doc)
-    entity.id.should.equal(mongo_doc['_id'])
+    entity.id.should eql(mongo_doc['_id'])
   end
 
   it "shouldn't create entity when doc is nil" do
-    Montgomery::Mapper.from_doc(nil).should.equal(nil)
+    Montgomery::Mapper.from_doc(nil).should be_nil
   end
 
   it 'should convert entity without id into Mongo doc' do
@@ -53,7 +53,7 @@ describe 'Montgomery::Mapper' do
     mongo_doc[:_class] = 'MapperItem'
 
     doc = Montgomery::Mapper.to_doc(entity)
-    doc.should.equal(mongo_doc)
+    doc.should eql(mongo_doc)
   end
 
   it 'should convert entity with id into Mongo doc' do
@@ -71,6 +71,6 @@ describe 'Montgomery::Mapper' do
     mongo_doc[:_class] = 'MapperItem'
 
     doc = Montgomery::Mapper.to_doc(entity)
-    doc.should.equal(mongo_doc)
+    doc.should eql(mongo_doc)
   end
 end
