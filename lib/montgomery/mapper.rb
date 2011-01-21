@@ -6,7 +6,7 @@ module Montgomery::Mapper
     end
     doc[:_class] = entity.class.to_s
     # _id == nil will cause MongoDB to insert without setting ObjectId
-    doc.delete(:_id) unless doc[:_id]
+    doc.delete(:_id) if doc[:_id] == nil
     doc
   end
 

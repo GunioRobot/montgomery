@@ -4,27 +4,15 @@ class MapperItem
   include Montgomery::Entity
 
   montgomery_attr_accessor :name, :weight
+
+  def initialize(values={})
+    @name = values['name']
+    @weight = values['weight']
+  end
 end
 
 describe 'Montgomery::Mapper' do
   it 'should create entity from doc' do
-    expected_doc = {
-      '_id' => Factory.mongo_object_id,
-      'name' => Faker::Lorem.sentence,
-      'weight' => rand(100)
-    }
-
-    mongo_doc = expected_doc.clone
-    mongo_doc['_class'] = 'MapperItem'
-
-    item_mock = mock
-    item_mock.should_receive(:_id=).with(mongo_doc['_id'])
-    MapperItem.should_receive(:new).with(expected_doc) { item_mock }
-
-    Montgomery::Mapper.from_doc(mongo_doc)
-  end
-
-  it 'should set id to entity from doc' do
     mongo_doc = {
       '_id' => Factory.mongo_object_id,
       'name' => Faker::Lorem.sentence,
@@ -33,7 +21,10 @@ describe 'Montgomery::Mapper' do
     }
 
     entity = Montgomery::Mapper.from_doc(mongo_doc)
+    entity.should be_instance_of(MapperItem)
     entity.id.should eql(mongo_doc['_id'])
+    entity.name.should eql(mongo_doc['name'])
+    entity.weight.should eql(mongo_doc['weight'])
   end
 
   it "shouldn't create entity when doc is nil" do
