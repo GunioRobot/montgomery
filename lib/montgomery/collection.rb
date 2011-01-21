@@ -43,7 +43,7 @@ class Montgomery::Collection < DelegateClass(Mongo::Collection)
     id_or_ids = @mongo_collection.insert(docs, options)
     ids = to_array(id_or_ids)
     entities.each_with_index do |entity, index|
-      entity.instance_variable_set(:@_id, ids[index])
+      entity.send(:_id=, ids[index])
     end
     ids
   end
