@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 class IdItem
-  include Montgomery::Entity::Attribute
+  extend Montgomery::Entity::Attribute
   include Montgomery::Entity::Id
 end
 

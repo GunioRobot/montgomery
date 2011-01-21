@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 class AttributeItem
-  include Montgomery::Entity::Attribute
+  extend Montgomery::Entity::Attribute
 end
 
 describe 'Montgomery::Entity' do
