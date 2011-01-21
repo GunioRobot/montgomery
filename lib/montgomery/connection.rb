@@ -1,46 +1,34 @@
-class Montgomery::Connection
-  include Montgomery::Delegator
-
-  # properties
-  delegate :arbiters, :auths, :checked_out, :host, :logger,
-      :nodes, :port, :primary, :secondaries, :size, :sockets,
-      to: :mongo_connection
-
-  # methods
-  delegate :add_auth, :apply_saved_authentication, :clear_auths,
-      :close, :connect, :connect_to_master, :connected?, :copy_database,
-      :database_info, :database_names, :drop_database, :format_pair,
-      :get_request_id, :pair_val_to_connection, :parse_uri, :receive_message,
-      :remove_auth, :send_message, :send_message_with_safe_check, :server_info,
-      :server_version, :slave_ok?, to: :mongo_connection
-
+class Montgomery::Connection < DelegateClass(Mongo::Connection)
   def self.from_uri(uri, options={})
-    @mongo_connection = Mongo::Connection.from_uri(uri, options)
+    mongo_connection = Mongo::Connection.from_uri(uri, options)
+    new(mongo_connection)
   end
 
   def self.multi(nodes, options={})
-    @mongo_connection = Mongo::Connection.multi(nodes, options)
+    mongo_connection = Mongo::Connection.multi(nodes, options)
+    new(mongo_connection)
   end
 
-  def self.paired(nodes, options={})
-    @mongo_connection = Mongo::Connection.paired(nodes, options)
-  end
-
-  def initialize(host=nil, port=nil, options={})
-    @mongo_connection = Mongo::Connection.new(host, port, options)
-  end
-
-  def database(name, options={})
-    Montgomery::Database.new @mongo_connection.db(name, options)
-  end
-
-  def db(name)
-    raise 'Use #database instead of #db'
+  def initialize(host_or_mongo_connection=nil, port=nil, options={})
+    case host_or_mongo_connection
+    when Mongo::Connection
+      @mongo_connection = host_or_mongo_connection
+    else
+      host = host_or_mongo_connection
+      @mongo_connection = Mongo::Connection.new(host, port, options)
+    end
+    super(@mongo_connection)
   end
 
   def [](name)
     Montgomery::Database.new @mongo_connection[name]
   end
+
+  def db(name, options={})
+    Montgomery::Database.new @mongo_connection.db(name, options)
+  end
+
+  alias_method :database, :db
 
   def to_mongo
     @mongo_connection

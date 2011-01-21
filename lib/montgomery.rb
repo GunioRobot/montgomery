@@ -1,6 +1,9 @@
 require 'montgomery/silencer'
 
-Montgomery::Silencer.silently { require 'mongo' }
+Montgomery::Silencer.silently {
+  require 'mongo'
+  require 'delegate'
+}
 
 require 'montgomery/delegator'
 require 'montgomery/connection'

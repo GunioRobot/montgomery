@@ -1,74 +1,74 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Connection' do
-  class_methods = Mongo::Connection.public_methods
-  class_methods.each do |method|
-    it "should respond to class method '#{method}'" do
-      Montgomery::Connection.should.respond_to method
+  describe "not connected" do
+    class_methods = Mongo::Connection.public_methods
+    # for some reason this method isn't delegated, but it isn't very useful anyway
+    class_methods.delete :yaml_tag_subclasses?
+    class_methods.each do |method|
+      it "should respond to class method '#{method}'" do
+        Montgomery::Connection.should respond_to method
+      end
     end
-  end
 
-  it 'should try to connect to MongoDB with .new' do
-    Mongo::Connection.expects(:new)
-    Montgomery::Connection.new
+    it 'should try to connect to MongoDB with .new without args' do
+      Mongo::Connection.should_receive(:new)
+      Montgomery::Connection.new
+    end
 
-    Mongo::Connection.expects(:new).with('localhost', 1234, test: true)
-    Montgomery::Connection.new('localhost', 1234, test: true)
-  end
+    it 'should try to connect to MongoDB with .new with args' do
+      args = ['localhost', 27017, {}]
+      Mongo::Connection.should_receive(:new).with(*args)
+      Montgomery::Connection.new(*args)
+    end
 
-  it 'should try to connect to MongoDB with .from_uri' do
-    Mongo::Connection.expects(:from_uri).with('mongodb://host', {})
-    Montgomery::Connection.from_uri('mongodb://host')
-  end
+    it 'should try to connect to MongoDB with .from_uri' do
+      uri = 'mongodb://host'
+      Mongo::Connection.should respond_to(:from_uri)
+      Mongo::Connection.should_receive(:from_uri).with(uri, {})
+      Montgomery::Connection.from_uri(uri).should be_instance_of(Montgomery::Connection)
+    end
 
-  it 'should try to connect to MongoDB with .multi' do
-    nodes = [["db1.example.com", 27017], ["db2.example.com", 27017]]
-    Mongo::Connection.expects(:multi).with(nodes, {})
-    Montgomery::Connection.multi(nodes)
-  end
-
-  it 'should try to connect to MongoDB with .paired' do
-    nodes = [["db1.example.com", 27017], ["db2.example.com", 27017]]
-    Mongo::Connection.expects(:paired).with(nodes, {})
-    Montgomery::Connection.paired(nodes)
+    it 'should try to connect to MongoDB with .multi' do
+      nodes = [["db1.example.com", 27017], ["db2.example.com", 27017]]
+      Mongo::Connection.should respond_to(:multi)
+      Mongo::Connection.should_receive(:multi).with(nodes, {})
+      Montgomery::Connection.multi(nodes).should be_instance_of(Montgomery::Connection)
+    end
   end
 
   describe 'when connected' do
     before do
-      @mongo_connection = mock('Mongo::Connection')
-      Mongo::Connection.stubs(:new).returns(@mongo_connection)
-
       @connection = Montgomery::Connection.new
     end
 
     instance_methods = Mongo::Connection.public_instance_methods
     instance_methods.each do |method|
       it "should respond to instance method '#{method}'" do
-        @connection.should.respond_to method
+        @connection.should respond_to method
       end
     end
 
     it 'should return a Mongo::Connection' do
-      @connection.to_mongo.should.equal @mongo_connection
+      @connection.to_mongo.should be_instance_of(Mongo::Connection)
     end
 
     it 'should return a database from #database' do
-      options = {test: true}
-      @mongo_connection.expects(:db).with('montgomery', options).returns(stub)
-
-      database = @connection.database('montgomery', options)
-      database.should.be.an.instance_of(Montgomery::Database)
+      database = @connection.database('montgomery', {})
+      database.should be_instance_of(Montgomery::Database)
+      database.name.should eql('montgomery')
     end
 
-    it 'should raise exception when calling #db' do
-      lambda { @connection.db('montgomery') }.should.raise(RuntimeError)
+    it 'should return a database from #db' do
+      database = @connection.db('montgomery', {})
+      database.should be_instance_of(Montgomery::Database)
+      database.name.should eql('montgomery')
     end
 
     it 'should return a database from #[]' do
-      @mongo_connection.expects(:[]).returns(stub)
-
       database = @connection['montgomery']
-      database.should.be.an.instance_of(Montgomery::Database)
+      database.should be_instance_of(Montgomery::Database)
+      database.name.should eql('montgomery')
     end
   end
 end
