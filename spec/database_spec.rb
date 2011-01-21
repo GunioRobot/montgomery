@@ -24,6 +24,12 @@ describe 'Montgomery::Database' do
     end
   end
 
+  it 'should create a collection' do
+    collection = @database.create_collection('items', {})
+    collection.should be_instance_of(Montgomery::Collection)
+    collection.name.should eql('items')
+  end
+
   it 'should return a collection' do
     collection = @database.collection('items')
     collection.should be_instance_of(Montgomery::Collection)
