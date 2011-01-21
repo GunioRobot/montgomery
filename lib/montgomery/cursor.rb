@@ -1,20 +1,12 @@
-class Montgomery::Cursor
+class Montgomery::Cursor < DelegateClass(Mongo::Cursor)
   include Enumerable
-  include Montgomery::Delegator
 
   attr_reader :collection
-
-  # properties
-  delegate :batch_size, :fields, :full_collection_name, :hint, :order,
-    :selector, :snapshot, :timeout, to: :mongo_cursor
-
-  # methods
-  delegate :close, :closed?, :count, :explain, :has_next?, :inspect, :limit,
-    :query_options_hash, :query_opts, :rewind!, :skip, :sort, to: :mongo_cursor
 
   def initialize(values)
     @mongo_cursor = values[:mongo_cursor]
     @collection = values[:collection]
+    super(@mongo_cursor)
   end
 
   def each
@@ -23,14 +15,12 @@ class Montgomery::Cursor
     end
   end
 
-  def next_document
-    raise 'Use #next_entity instead of #next_document'
-  end
-
   def next_entity
     doc = @mongo_cursor.next_document
     Montgomery::Mapper.from_doc(doc)
   end
+
+  alias_method :next_document, :next_entity
 
   def to_a
     docs = @mongo_cursor.to_a
