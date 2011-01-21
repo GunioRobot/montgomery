@@ -10,6 +10,13 @@ class Montgomery::Database < DelegateClass(Mongo::DB)
                                database: self
   end
 
+  def collections
+    @mongo_database.collections.map! do |c|
+      Montgomery::Collection.new mongo_collection: c,
+                                 database: self
+    end
+  end
+
   def create_collection(name, options={})
     mongo_collection = @mongo_database.create_collection(name, options)
     Montgomery::Collection.new mongo_collection: mongo_collection,

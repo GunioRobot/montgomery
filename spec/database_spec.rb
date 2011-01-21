@@ -36,6 +36,13 @@ describe 'Montgomery::Database' do
     collection.name.should eql('items')
   end
 
+  it 'should return all collections' do
+    collections = @database.collections
+    collections.should be_instance_of(Array)
+    collections.should_not be_empty
+    collections.each { |c| c.should be_instance_of(Montgomery::Collection) }
+  end
+
   it 'should return a Mongo database' do
     @database.to_mongo.should equal @mongo_database
   end
