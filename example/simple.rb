@@ -133,8 +133,9 @@ end
 
 # you can do aggregations
 puts "Group places by city and district:"
-pp Places.group(['city', 'district'], {}, {count: 0},
-  'function(doc, result) { result.count++; }')
+pp Places.group key: ['city', 'district'],
+                initial: {count: 0},
+                reduce: 'function(doc, result) { result.count++; }'
 
 # it's possible to update place's info
 puts "Updating place with name 'Kotłownia'..."
