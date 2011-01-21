@@ -1,11 +1,10 @@
 $LOAD_PATH.unshift 'lib'
 require 'montgomery'
 
-gem 'test-unit'
-require 'test/spec'
+require 'bundler/setup'
+
 Montgomery::Silencer.silently {
-  require 'mocha'
-  require 'faker'
+  Bundler.require(:test)
 }
 
 require 'pp'

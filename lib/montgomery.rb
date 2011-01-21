@@ -1,3 +1,7 @@
+require 'montgomery/silencer'
+
+Montgomery::Silencer.silently { require 'mongo' }
+
 module Montgomery
   autoload :Collection, 'montgomery/collection'
   autoload :Connection, 'montgomery/connection'
@@ -6,7 +10,4 @@ module Montgomery
   autoload :Delegator, 'montgomery/delegator'
   autoload :Entity, 'montgomery/entity'
   autoload :Mapper, 'montgomery/mapper'
-  autoload :Silencer, 'montgomery/silencer'
 end
-
-Montgomery::Silencer.silently { require 'mongo' }
