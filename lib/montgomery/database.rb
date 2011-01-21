@@ -4,8 +4,8 @@ class Montgomery::Database < DelegateClass(Mongo::DB)
     super(@mongo_database)
   end
 
-  def collection(name)
-    mongo_collection = @mongo_database.collection(name)
+  def collection(name, options={})
+    mongo_collection = @mongo_database.collection(name, options)
     Montgomery::Collection.new mongo_collection: mongo_collection,
                                database: self
   end

@@ -31,7 +31,7 @@ describe 'Montgomery::Database' do
   end
 
   it 'should return a collection' do
-    collection = @database.collection('items')
+    collection = @database.collection('items', {})
     collection.should be_instance_of(Montgomery::Collection)
     collection.name.should eql('items')
   end
