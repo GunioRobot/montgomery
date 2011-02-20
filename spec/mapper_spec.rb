@@ -40,8 +40,9 @@ describe 'Montgomery::Mapper' do
       :name => Faker::Lorem.sentence,
       :weight => rand(100)
     }
-    entity = User.new('name' => doc[:name], 'weight' => doc[:weight])
-    entity.send('_id=', doc[:_id])
+    entity = User.new('_id' => doc[:_id],
+                      'name' => doc[:name],
+                      'weight' => doc[:weight])
     mongo_doc = doc.clone
     mongo_doc[:_class] = 'User'
     doc = Montgomery::Mapper.to_doc(entity)

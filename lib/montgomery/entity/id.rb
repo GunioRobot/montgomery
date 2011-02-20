@@ -2,20 +2,16 @@ module Montgomery
   module Entity
     module Id
       def self.included(base)
+        base.extend Montgomery::Entity::Attribute
         base.class_eval do
           montgomery_attr_reader :_id
           alias_method :id, :_id
         end
       end
 
-      private
+      protected
 
-      # avoid "warning: private attribute?"
-      def _id=(bson_id)
-        @_id = bson_id
-      end
-
-      alias_method :id=, :_id=
+      attr_writer :_id
     end
   end
 end

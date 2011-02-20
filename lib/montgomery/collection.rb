@@ -43,7 +43,7 @@ class Montgomery::Collection < DelegateClass(Mongo::Collection)
     id_or_ids = @mongo_collection.insert(docs, options)
     ids = to_array(id_or_ids)
     entities.each_with_index do |entity, index|
-      entity.send(:_id=, ids[index])
+      Montgomery::Mapper.update_id(entity, ids[index])
     end
     ids
   end
@@ -58,7 +58,7 @@ class Montgomery::Collection < DelegateClass(Mongo::Collection)
   def save(entity, options={})
     doc = Montgomery::Mapper.to_doc(entity)
     id = @mongo_collection.save(doc, options)
-    entity.send(:_id=, id)
+    Montgomery::Mapper.update_id(entity, id)
     id
   end
 

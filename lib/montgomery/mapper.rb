@@ -1,4 +1,7 @@
 module Montgomery::Mapper
+  # to be able to call protected #_id= on entities
+  extend Montgomery::Entity::Id
+
   def self.to_doc(entity)
     doc = {}
     entity.class.montgomery_attrs.each do |attribute|
@@ -21,7 +24,11 @@ module Montgomery::Mapper
     klass_name = doc.delete('_class')
     klass = Kernel.const_get(klass_name)
     entity = klass.new(doc)
-    entity.send(:_id=, doc['_id'])
+    update_id(entity, doc['_id'])
     entity
+  end
+
+  def self.update_id(entity, id)
+    entity._id = id
   end
 end
