@@ -1,9 +1,9 @@
 require './spec/spec_helper'
 
 describe Montgomery::Connection do
-  describe "not connected" do
-    it_behaves_like "delegated", :to => Mongo::Connection
+  it_behaves_like "delegated", :to => Mongo::Connection
 
+  describe "not connected" do
     it 'should try to connect to MongoDB with .new without args' do
       Mongo::Connection.should_receive(:new)
       Montgomery::Connection.new
@@ -31,34 +31,24 @@ describe Montgomery::Connection do
   end
 
   describe 'when connected' do
-    before do
-      @connection = Montgomery::Connection.new
-    end
-
-    current_instance_methods(Mongo::Connection).each do |method|
-      it "should respond to instance method '#{method}'" do
-        @connection.should respond_to method
-      end
-    end
-
     it 'should return a Mongo::Connection' do
-      @connection.to_mongo.should be_instance_of(Mongo::Connection)
+      subject.to_mongo.should be_instance_of(Mongo::Connection)
     end
 
     it 'should return a database from #database' do
-      database = @connection.database('montgomery', {})
+      database = subject.database('montgomery', {})
       database.should be_instance_of(Montgomery::Database)
       database.name.should eql('montgomery')
     end
 
     it 'should return a database from #db' do
-      database = @connection.db('montgomery', {})
+      database = subject.db('montgomery', {})
       database.should be_instance_of(Montgomery::Database)
       database.name.should eql('montgomery')
     end
 
     it 'should return a database from #[]' do
-      database = @connection['montgomery']
+      database = subject['montgomery']
       database.should be_instance_of(Montgomery::Database)
       database.name.should eql('montgomery')
     end

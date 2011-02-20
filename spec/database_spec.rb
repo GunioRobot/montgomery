@@ -3,37 +3,32 @@ require './spec/spec_helper'
 describe Montgomery::Database do
   it_behaves_like "delegated", :to => Mongo::DB
 
-  before do
-    @mongo_database = Mongo::Connection.new.db('montgomery')
-    @database = Montgomery::Database.new(@mongo_database)
-  end
+  let(:mongo_database) { Mongo::Connection.new.db('montgomery') }
 
-  current_instance_methods(Mongo::DB).each do |method|
-    it "should respond to instance method '#{method}'" do
-      @database.should respond_to method
-    end
+  subject do
+    Montgomery::Database.new(mongo_database)
   end
 
   it 'should create a collection' do
-    collection = @database.create_collection('items', {})
+    collection = subject.create_collection('items', {})
     collection.should be_instance_of(Montgomery::Collection)
     collection.name.should eql('items')
   end
 
   it 'should return a collection' do
-    collection = @database.collection('items', {})
+    collection = subject.collection('items', {})
     collection.should be_instance_of(Montgomery::Collection)
     collection.name.should eql('items')
   end
 
   it 'should return all collections' do
-    collections = @database.collections
+    collections = subject.collections
     collections.should be_instance_of(Array)
     collections.should_not be_empty
     collections.each { |c| c.should be_instance_of(Montgomery::Collection) }
   end
 
   it 'should return a Mongo database' do
-    @database.to_mongo.should equal @mongo_database
+    subject.to_mongo.should eql(mongo_database)
   end
 end
