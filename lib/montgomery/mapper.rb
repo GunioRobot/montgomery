@@ -5,8 +5,13 @@ module Montgomery::Mapper
       doc[attribute] = entity.send(attribute)
     end
     doc[:_class] = entity.class.to_s
-    # _id == nil will cause MongoDB to insert without setting ObjectId
-    doc.delete(:_id) if doc[:_id] == nil
+
+    # BSON::ObjectId#== throws a warning here - let's silence it
+    Montgomery::Silencer.silently do
+      # _id == nil will cause MongoDB to insert without setting ObjectId
+      doc.delete(:_id) if doc[:_id] == nil
+    end
+
     doc
   end
 
