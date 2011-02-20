@@ -1,9 +1,8 @@
-require 'bundler/setup'
-
 $LOAD_PATH.unshift 'lib'
 require 'montgomery/silencer'
 
 Montgomery::Silencer.silently {
+  require 'bundler/setup'
   Bundler.require(:development)
 }
 
