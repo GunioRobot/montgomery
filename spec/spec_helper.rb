@@ -20,3 +20,11 @@ module Factory
     BSON::ObjectId.from_time(Time.now)
   end
 end
+
+def current_class_methods(klass)
+  klass.public_methods - klass.superclass.public_methods
+end
+
+def current_instance_methods(klass)
+  klass.public_instance_methods - klass.superclass.public_instance_methods
+end

@@ -2,10 +2,7 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Database' do
   describe 'class methods' do
-    class_methods = Mongo::DB.public_methods
-    # for some reason this method isn't delegated, but it isn't very useful anyway
-    class_methods.delete :yaml_tag_subclasses?
-    class_methods.each do |method|
+    current_class_methods(Mongo::DB).each do |method|
       it "should respond to class method '#{method}'" do
         Montgomery::Database.should respond_to method
       end
@@ -17,8 +14,7 @@ describe 'Montgomery::Database' do
     @database = Montgomery::Database.new(@mongo_database)
   end
 
-  instance_methods = Mongo::DB.public_instance_methods
-  instance_methods.each do |method|
+  current_instance_methods(Mongo::DB).each do |method|
     it "should respond to instance method '#{method}'" do
       @database.should respond_to method
     end

@@ -2,10 +2,7 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Cursor' do
   describe 'class methods' do
-    class_methods = Mongo::Cursor.public_methods
-    # for some reason this method isn't delegated, but it isn't very useful anyway
-    class_methods.delete :yaml_tag_subclasses?
-    class_methods.each do |method|
+    current_class_methods(Mongo::Cursor).each do |method|
       it "should respond to class method '#{method}'" do
         Montgomery::Cursor.should respond_to(method)
       end
@@ -30,8 +27,7 @@ describe 'Montgomery::Cursor' do
                                        collection: @collection
     end
 
-    instance_methods = Mongo::Cursor.public_instance_methods
-    instance_methods.each do |method|
+    current_instance_methods(Mongo::Cursor).each do |method|
       it "should respond to instance method '#{method}'" do
         @cursor.should respond_to(method)
       end

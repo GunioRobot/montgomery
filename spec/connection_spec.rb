@@ -2,10 +2,7 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
 
 describe 'Montgomery::Connection' do
   describe "not connected" do
-    class_methods = Mongo::Connection.public_methods
-    # for some reason this method isn't delegated, but it isn't very useful anyway
-    class_methods.delete :yaml_tag_subclasses?
-    class_methods.each do |method|
+    current_class_methods(Mongo::Connection).each do |method|
       it "should respond to class method '#{method}'" do
         Montgomery::Connection.should respond_to method
       end
@@ -42,8 +39,7 @@ describe 'Montgomery::Connection' do
       @connection = Montgomery::Connection.new
     end
 
-    instance_methods = Mongo::Connection.public_instance_methods
-    instance_methods.each do |method|
+    current_instance_methods(Mongo::Connection).each do |method|
       it "should respond to instance method '#{method}'" do
         @connection.should respond_to method
       end
