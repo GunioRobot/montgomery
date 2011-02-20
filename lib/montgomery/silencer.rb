@@ -1,10 +1,10 @@
 module Montgomery
   module Silencer
-    def self.silently(&block)
-      warn_level = $VERBOSE
+    def self.silently
+      verbosity = $VERBOSE
       $VERBOSE = nil
-      result = block.call
-      $VERBOSE = warn_level
+      result = yield
+      $VERBOSE = verbosity
       result
     end
   end
