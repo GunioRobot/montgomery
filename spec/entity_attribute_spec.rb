@@ -4,7 +4,7 @@ class AttributeItem
   extend Montgomery::Entity::Attribute
 end
 
-describe 'Montgomery::Entity::Attribute' do
+describe Montgomery::Entity::Attribute do
   it 'should define attr_reader with montgomery_attr_reader' do
     AttributeItem.montgomery_attr_reader :size
     AttributeItem.public_instance_methods.should include(:size)

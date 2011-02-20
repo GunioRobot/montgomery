@@ -1,13 +1,7 @@
 require './spec/spec_helper'
 
-describe 'Montgomery::Collection' do
-  describe 'class methods' do
-    current_class_methods(Mongo::Collection).each do |method|
-      it "should respond to class method '#{method}'" do
-        Montgomery::Collection.should respond_to method
-      end
-    end
-  end
+describe Montgomery::Collection do
+  it_behaves_like "delegated", :to => Mongo::Collection
 
   describe 'new instance' do
     before do

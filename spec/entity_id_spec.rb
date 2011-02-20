@@ -4,7 +4,7 @@ class IdItem
   include Montgomery::Entity::Id
 end
 
-describe 'Montgomery::Entity::Id' do
+describe Montgomery::Entity::Id do
   it 'should define public id, _id and protected _id=' do
     IdItem.public_instance_methods.should include(:id)
     IdItem.public_instance_methods.should include(:_id)

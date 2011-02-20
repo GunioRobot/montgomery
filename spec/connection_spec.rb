@@ -1,12 +1,8 @@
 require './spec/spec_helper'
 
-describe 'Montgomery::Connection' do
+describe Montgomery::Connection do
   describe "not connected" do
-    current_class_methods(Mongo::Connection).each do |method|
-      it "should respond to class method '#{method}'" do
-        Montgomery::Connection.should respond_to method
-      end
-    end
+    it_behaves_like "delegated", :to => Mongo::Connection
 
     it 'should try to connect to MongoDB with .new without args' do
       Mongo::Connection.should_receive(:new)

@@ -1,13 +1,7 @@
 require './spec/spec_helper'
 
-describe 'Montgomery::Cursor' do
-  describe 'class methods' do
-    current_class_methods(Mongo::Cursor).each do |method|
-      it "should respond to class method '#{method}'" do
-        Montgomery::Cursor.should respond_to(method)
-      end
-    end
-  end
+describe Montgomery::Cursor do
+  it_behaves_like "delegated", :to => Mongo::Cursor
 
   it 'should include Enumerable' do
     Montgomery::Cursor.should include Enumerable

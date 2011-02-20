@@ -20,10 +20,20 @@ module Factory
   end
 end
 
-def current_class_methods(klass)
-  klass.public_methods - klass.superclass.public_methods
-end
-
 def current_instance_methods(klass)
   klass.public_instance_methods - klass.superclass.public_instance_methods
+end
+
+shared_examples_for "delegated" do |options|
+  describe "class methods" do
+    delegatee = options[:to]
+    class_methods = delegatee.public_methods - delegatee.superclass.public_methods
+    class_methods.each do |method|
+      it "should respond to class method '#{method}'" do
+        described_class.should respond_to method
+      end
+    end
+  end
+
+  #let(:klass) { described_class.new([7, 2, 4]) }
 end

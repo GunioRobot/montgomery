@@ -1,13 +1,7 @@
 require './spec/spec_helper'
 
-describe 'Montgomery::Database' do
-  describe 'class methods' do
-    current_class_methods(Mongo::DB).each do |method|
-      it "should respond to class method '#{method}'" do
-        Montgomery::Database.should respond_to method
-      end
-    end
-  end
+describe Montgomery::Database do
+  it_behaves_like "delegated", :to => Mongo::DB
 
   before do
     @mongo_database = Mongo::Connection.new.db('montgomery')

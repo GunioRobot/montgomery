@@ -1,6 +1,6 @@
 require './spec/spec_helper'
 
-describe 'Montgomery::Mapper' do
+describe Montgomery::Mapper do
   it 'should create entity from doc' do
     mongo_doc = {
       '_id' => Factory.mongo_object_id,
