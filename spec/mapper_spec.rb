@@ -1,27 +1,16 @@
 require './spec/spec_helper'
 
-class MapperItem
-  include Montgomery::Entity
-
-  montgomery_attr_accessor :name, :weight
-
-  def initialize(values={})
-    @name = values['name']
-    @weight = values['weight']
-  end
-end
-
 describe 'Montgomery::Mapper' do
   it 'should create entity from doc' do
     mongo_doc = {
       '_id' => Factory.mongo_object_id,
       'name' => Faker::Lorem.sentence,
       'weight' => rand(100),
-      '_class' => 'MapperItem'
+      '_class' => 'User'
     }
 
     entity = Montgomery::Mapper.from_doc(mongo_doc)
-    entity.should be_instance_of(MapperItem)
+    entity.should be_instance_of(User)
     entity.id.should eql(mongo_doc['_id'])
     entity.name.should eql(mongo_doc['name'])
     entity.weight.should eql(mongo_doc['weight'])
@@ -36,12 +25,10 @@ describe 'Montgomery::Mapper' do
       :name => Faker::Lorem.sentence,
       :weight => rand(100)
     }
-    entity = MapperItem.new
-    entity.name = doc[:name]
-    entity.weight = doc[:weight]
+    entity = User.new('name' => doc[:name], 'weight' => doc[:weight])
 
     mongo_doc = doc.clone
-    mongo_doc[:_class] = 'MapperItem'
+    mongo_doc[:_class] = 'User'
 
     doc = Montgomery::Mapper.to_doc(entity)
     doc.should eql(mongo_doc)
@@ -53,15 +40,11 @@ describe 'Montgomery::Mapper' do
       :name => Faker::Lorem.sentence,
       :weight => rand(100)
     }
-    entity = MapperItem.new
-    entity.send(:_id=, doc[:_id])
-    entity.name = doc[:name]
-    entity.weight = doc[:weight]
-
+    entity = User.new('name' => doc[:name], 'weight' => doc[:weight])
+    entity.send('_id=', doc[:_id])
     mongo_doc = doc.clone
-    mongo_doc[:_class] = 'MapperItem'
-
+    mongo_doc[:_class] = 'User'
     doc = Montgomery::Mapper.to_doc(entity)
-    doc.should eql(mongo_doc)
+    Montgomery::Silencer.silently { doc.should eql(mongo_doc) }
   end
 end

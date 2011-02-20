@@ -78,17 +78,17 @@ describe 'Montgomery::Collection' do
 
       it 'should insert an entity' do
         id = Factory.mongo_object_id
-        doc = {:name => 'Wojciech', :_class => 'User'}
+        doc = {:name => 'Wojciech', :_class => 'User', :weight => nil}
         @mongo_collection.should_receive(:insert).with([doc], {}) { id }
 
         user = User.new 'name' => 'Wojciech'
-        @collection.insert(user).should eql [id]
-        user._id.should eql id
+        @collection.insert(user).should eql([id])
+        Montgomery::Silencer.silently { user._id.should eql(id) }
       end
 
       it 'should insert 2 entities' do
-        doc1 = {:name => 'Wojciech', :_class => 'User'}
-        doc2 = {:name => 'Hubert', :_class => 'User'}
+        doc1 = {:name => 'Wojciech', :_class => 'User', :weight => nil}
+        doc2 = {:name => 'Hubert', :_class => 'User', :weight => nil}
         id1 = Factory.mongo_object_id
         id2 = Factory.mongo_object_id
         @mongo_collection.should_receive(:insert).
@@ -96,7 +96,7 @@ describe 'Montgomery::Collection' do
 
         user1 = User.new 'name' => 'Wojciech'
         user2 = User.new 'name' => 'Hubert'
-        @collection.insert([user1, user2]).should eql [id1, id2]
+        @collection.insert([user1, user2]).should eql([id1, id2])
         user1._id.should eql id1
         user2._id.should eql id2
       end
@@ -111,7 +111,7 @@ describe 'Montgomery::Collection' do
         @mongo_collection.should_receive(:remove).
                           with({name: 'Wojciech'}, {}) { true }
 
-        @collection.remove({name: 'Wojciech'}).should eql true
+        @collection.remove({name: 'Wojciech'}).should be_true
       end
 
       it 'should remove existing entity' do
@@ -119,8 +119,7 @@ describe 'Montgomery::Collection' do
         user = User.new({'_id' => user_id})
         @mongo_collection.should_receive(:remove).
                           with({_id: {'$in' => [user_id]}}, {}) { true }
-
-        @collection.remove(user).should eql true
+        @collection.remove(user).should be_true
       end
 
       it 'should save the entity with id and retain the id' do
@@ -128,22 +127,24 @@ describe 'Montgomery::Collection' do
         @mongo_collection.should_receive(:save).with({
           :_id => id,
           :name => 'Hubert',
-          :_class => 'User'
+          :_class => 'User',
+          :weight => nil
         }, {}) { id }
         user = User.new('name' => 'Wojciech', '_id' => id)
         user.name = 'Hubert'
-        @collection.save(user).should eql id
+        Montgomery::Silencer.silently { @collection.save(user).should eql(id) }
       end
 
       it 'should save the entity without id and assign an id' do
         id = Factory.mongo_object_id
         @mongo_collection.should_receive(:save).with({
           :name => 'Hubert',
-          :_class => 'User'
+          :_class => 'User',
+          :weight => nil
         }, {}) { id }
         user = User.new('name' => 'Wojciech')
         user.name = 'Hubert'
-        @collection.save(user).should eql id
+        Montgomery::Silencer.silently { @collection.save(user).should eql(id) }
       end
 
       it 'should update the collection' do
