@@ -1,4 +1,4 @@
-require File.join(File.expand_path(File.dirname(__FILE__)), 'spec_helper')
+require './spec/spec_helper'
 
 class IdItem
   extend Montgomery::Entity::Attribute
