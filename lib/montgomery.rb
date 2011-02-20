@@ -1,3 +1,6 @@
+module Montgomery
+end
+
 require 'montgomery/silencer'
 
 Montgomery::Silencer.silently {

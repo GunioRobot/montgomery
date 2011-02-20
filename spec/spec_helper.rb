@@ -1,11 +1,14 @@
-$LOAD_PATH.unshift 'lib'
-require 'montgomery'
-
 require 'bundler/setup'
 
+$LOAD_PATH.unshift 'lib'
+require 'montgomery/silencer'
+
 Montgomery::Silencer.silently {
-  Bundler.require(:test)
+  Bundler.require(:development)
 }
+
+# load whole montgomery after bundler loads required gems
+require 'montgomery'
 
 require 'pp'
 
